@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Show</title>
+    <style>
+        .upper{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+            margin-top: 1rem;
+            border-bottom: 2px solid black;
+        }
+            .lower{
+        display: flex;  
+        align-items: center;
+        justify-content: space-around;
+        flex-direction: row;
+        margin-top: 2rem;
+        margin-left: 2rem;
+        margin-right: 20rem;
+    }
+    </style>
+</head>
+<body>
+    <div class="upper">
+        <h1>{{request.session.username}}! </h1>
+        <a style="color: blue; margin-right: 2rem; margin-left: 1rem;" href="/logout">Log Out</a>
+    </div>
+    <div class="lower">
+        <div>
+            <h2 style="margin-bottom: 2rem;">Event Details</h2>
+                <div>
+                    <p>{{oneevent.title}}</p>
+                </div>
+                <p>Added by:- {{oneevent.uploaded_by.first_name}} {{oneevent.uploaded_by.last_name}}</p>
+                <p>Added on:- {{oneevent.created_at}}</p>
+                <p>Last updated:- {{oneevent.updated_at}}</p>
+                <div>
+                    <p style="margin-top: 1rem;">{{oneevent.desc}}</p>
+                    <p style="margin-top: 1rem;">{{oneevent.year}}</p>
+                </div>
+                <div>
+                    <iframe width="640" height="360" src="https://www.youtube.com/embed/tfKb7Aw-AZk" frameborder="0" allowfullscreen>
+                    </iframe>
+                </div>
+        </div>
+        <div>
+            <!-- <h2>Users Who Like This Book:</h2>
+            {% for usr in onebook.user_like.all %}
+            <ul>
+                <li>{{usr.first_name}} {{usr.last_name}}</li>
+                {%if oneuser not in onebook.user_like.all%}
+                <a href="">Fav This Book (Add to Favorites)</a>
+                {%endif%}
+            {%endfor%}
+            </ul> -->
+        </div>
+</body>
+</html>
