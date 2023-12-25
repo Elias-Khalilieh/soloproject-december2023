@@ -34,7 +34,10 @@ body{
 <body>
     <div class="upper">
         <h1>{{request.session.username}} Profile</h1>
-        <a style="margin-right: 2rem; margin-left: 1rem;" href="/logout"><button class="btn btn-danger">Log Out</button></a>
+        <div>
+            <a href="/returnhome"><button type="button" class="btn btn-secondary">Back Home</button></a>
+            <a style="margin-right: 2rem; margin-left: 1rem;" href="/logout"><button class="btn btn-danger">Log Out</button></a>
+        </div>
     </div>
     <div class="container">
         <h2 style="margin-bottom: 2rem;">Add An Event</h2>
@@ -56,7 +59,7 @@ body{
                 <label>Link:</label>
                 <input style="margin-left: 4rem; margin-top: 2rem;" type="text" name="ylink" value="{{oneevent.link}}"></input>
             </div>
-            <button style="margin-left: 6rem; margin-top: 4rem;" class="btn btn-success" type="submit" >Add</button>
+            <button style="margin-left: 6rem; margin-top: 4rem;" class="btn btn-success" type="submit" >Update</button>
         </form>
         {% if messages %}
             <ul class="messages">    

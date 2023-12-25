@@ -12,7 +12,10 @@
 }
 body{
     color: red;
-    background: url("https://wallpapers.com/images/hd/cristiano-ronaldo-foreground-screams-rhp9kfu8xsmwrcge.webp");
+    background-image: url("https://wallpapers.com/images/hd/cristiano-ronaldo-foreground-screams-rhp9kfu8xsmwrcge.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
 }
 
 .upper{
@@ -29,15 +32,61 @@ body{
     margin: 4rem;
     padding: 4rem;
 }
+.custom-btn {
+ width: 130px;
+ height: 40px;
+ color: #fff;
+ border-radius: 5px;
+ padding: 10px 25px;
+ font-family: 'Lato', sans-serif;
+ font-weight: 500;
+ background: transparent;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ position: relative;
+ display: inline-block;
+ box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),
+   7px 7px 20px 0px rgba(0,0,0,.1),
+   4px 4px 5px 0px rgba(0,0,0,.1);
+ outline: none;
+}
+
+.btn-1 {
+ background: rgb(96,9,240);
+ background: linear-gradient(0deg, rgba(96,9,240,1) 0%, rgba(129,5,240,1) 100%);
+ border: none;
+}
+
+.btn-1:before {
+ height: 0%;
+ width: 2px;
+}
+
+.btn-1:hover {
+ box-shadow: 4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .5), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.2),
+    inset 4px 4px 6px 0 rgba(0, 0, 0, .4);
+}
     </style>
 </head>
 <body>
     <div class="upper">
         <h1>{{request.session.username}} Profile</h1>
-        <a style="margin-right: 2rem; margin-left: 1rem;" href="/logout"><button class="btn btn-danger">Log Out</button></a>
+        <div>
+            <a href="/returnhome"><button type="button" class="btn btn-secondary">Back Home</button></a>
+            <a style="margin-right: 2rem; margin-left: 1rem;" href="/logout"><button class="btn btn-danger">Log Out</button></a>
+        </div>
     </div>
     <div class="container">
         <h2 style="margin-bottom: 2rem;">Add An Event</h2>
+        {% if messages %}
+            <ul class="messages">    
+                {% for message in messages %}    
+                <li>{{ message }}</li>    
+                {% endfor %}
+            </ul>
+        {% endif %}
         <form action="/addevent1" method='POST'>
             {% csrf_token%}
             <div class="form-group">
@@ -54,17 +103,10 @@ body{
             </div>
             <div class="form-group">
                 <label>Link:</label>
-                <input style="margin-left: 4rem; margin-top: 2rem;" type="text" name="ylink"></input>
+                <input style="margin-left: 4rem; margin-top: 2rem;" type="text" name="ylink" placeholder="add the video key only!"></input>
             </div>
-            <button style="margin-left: 6rem; margin-top: 4rem;" class="btn btn-success" type="submit" >Add</button>
+            <button style="margin-left: 6rem; margin-top: 4rem;" class="custom-btn" type="submit" >Add</button>
         </form>
-        {% if messages %}
-            <ul class="messages">    
-                {% for message in messages %}    
-                <li>{{ message }}</li>    
-                {% endfor %}
-            </ul>
-        {% endif %}
     </div>
 </body>
 </html>

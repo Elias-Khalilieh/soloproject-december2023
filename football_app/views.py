@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from football_app.models import *
+from django.db.models import Count
 
 
 def display_log_reg(request):
@@ -13,8 +14,10 @@ def display_home(request):
     else:
         context={
             'user_in':User.objects.get(id=request.session['id']),
-            'allevents':Event.objects.all()
+            'allevents':Event.objects.all(),
+            'top_events' : Event.objects.all().annotate(num_comments=Count('event_comments')).order_by('-num_comments')[:3],
         }
+        
         return render(request,'home.html',context)
     
 ## Registering a New Account:
@@ -74,7 +77,7 @@ def create_event(request):
         if len(errors) > 0:
             for key, value in errors.items():
                 messages.error(request, value)
-            return redirect('/success')
+            return redirect('/add_an_event')
         else: 
             user_id=request.session['id']
             event1=Event.new_event(title=request.POST['title'],
@@ -95,7 +98,8 @@ def show_event(request,evid):
         uploader = Event.objects.get(id=evid)
         context = {
             'oneevent':Event.one_event(evid),
-            'oneuser':User.user_in_account(request.session['id'])
+            'oneuser':User.user_in_account(request.session['id']),
+            'comments':Comment.objects.all()
             }
         return render(request,'event_show_page.html',context)
     
@@ -108,3 +112,54 @@ def show_edit(request,evid):
                 'oneuser':User.user_in_account(request.session['id'])
             }
         return render(request,'event_edit_page.html',context)
+
+def updateevent(request,evid):
+    if 'id' not in request.session:
+        return redirect('/')
+    else:
+        errors = Event.objects.event_basic_validator(request.POST)
+    if len(errors) > 0:
+        for key,value in errors.items():
+            messages.error(request, value)
+        return redirect ('/event/'+str(evid)+'/edit')
+    Event.update_one(evid,request.POST['title'],request.POST['desc'],request.POST['year'],request.POST['ylink'])
+    return redirect ('/success')
+
+def postcomment(request,evid):
+    if 'id' not in request.session:
+        return redirect('/')
+    else:
+        logged_user = User.objects.get(id=request.session['id'])
+        showed_event = Event.objects.get(id = evid)
+        comment1 = Comment.new_cmnt(comment_entry=request.POST['comment_add'],user = logged_user,event=showed_event)
+        return redirect('/success')
+
+def deletethiscomment(request,cmntid):
+    Comment.delete_cmnt(cmntid)
+    return redirect('/success')
+
+
+def deletethisevent(request,evid):
+    Event.delete_event(evid)
+    return redirect("/success")
+
+def backhome (request):
+    if 'id' not in request.session:
+        return redirect('/')
+    else:
+        return redirect('/success')
+    
+def favorite_this_book(request,evid):
+    Event.fav_add_one(request.session['id'],evid)
+    return redirect("/success")
+
+def unfavorite_this_book(request,evid):
+    Event.unfav_rem_one(request.session['id'],evid)
+    return redirect("/success")
+
+
+def displyaboutus(request):
+    if 'id' not in request.session:
+        return redirect('/')
+    else:
+        return render(request,'about.html')

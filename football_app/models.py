@@ -48,12 +48,12 @@ class UserManager(models.Manager):
 class EventManager(models.Manager):
     def event_basic_validator(self,postData):
         errors = {}
-        if len(postData['title']) < 1:
+        if len(postData['title']) < 5:
             errors['title']="Please :) Add a Title!."
         if len(postData['desc'])<10:
             errors['desc']="Description Must Be More Than 10 Characters."
-        if int(postData['year']) > 2023:
-            errors['year'] = "Enter a Valid Year"
+        if postData['year'] > '2023' :
+            errors['year']="Please Enter a Valid Year"
         if len(postData['ylink']) < 10:
             errors['ylink']="Invalid Link"
         return errors
@@ -91,9 +91,38 @@ class Event(models.Model):
     def one_event(id):
         return Event.objects.get(id=id)
     
+    def update_one(id,title,desc,year,link):
+        update1 =Event.objects.get(id=int(id))
+        update1.title=title
+        update1.desc=desc
+        update1.year=year
+        update1.link=link
+        update1.save()
+        
+    def delete_event(id):
+        event1 = Event.objects.filter(id=int(id))
+        event1.delete()
+        
+    def fav_add_one(userid,evid):
+        user1 = User.objects.get(id=int(userid))
+        event1 = Event.objects.get(id=int(evid))
+        event1.user_that_fav.add(user1)
+        
+    def unfav_rem_one(userid,evid):
+        user1 = User.objects.get(id=int(userid))
+        event1 = Event.objects.get(id=int(evid))
+        event1.user_that_fav.remove(user1)
+    
 class Comment(models.Model):
     comment_entry = models.TextField()
     user = models.ForeignKey(User,related_name="user_comments",on_delete=models.CASCADE)
-    message = models.ForeignKey(Event,related_name="message_comments",on_delete=models.CASCADE)
+    event = models.ForeignKey(Event,related_name="event_comments",on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def new_cmnt(comment_entry,user,event):
+        Comment.objects.create(comment_entry=comment_entry,user=user,event=event)
+        
+    def delete_cmnt(id):
+        cmnt1 = Comment.objects.get(id=int(id))
+        cmnt1.delete()
